@@ -1,0 +1,14 @@
+name: Test
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v3
+      - name: Run Tests
+        run: go test -race ./...

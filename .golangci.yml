@@ -1,0 +1,62 @@
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - deadcode
+    - durationcheck
+    - errcheck
+    - errorlint
+    - exportloopref
+    - forbidigo
+    - gocritic
+    - godot
+    - gofumpt
+    - goimports
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - nakedret
+    - prealloc
+    - predeclared
+    - revive
+    - rowserrcheck
+    - staticcheck
+    - structcheck
+    - thelper
+    - tparallel
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - varcheck
+    - whitespace
+
+linters-settings:
+  godot:
+    exclude:
+      - ^\s*.+:.+$
+      - ^\s*(?:=+|/+|-+|\++)
+
+issues:
+  exclude-rules:
+    # prevent errors on type assertions with field access
+    - linters:
+        - errorlint
+      source: \w\.\(\*?\w+\)\.\w+
+    - linters:
+        - lll
+      source: //(?:nolint|go|goland)
+    # io.EOF and sql.ErrNoRows should, according to the doc, never be wrapped
+    - linters:
+        - errorlint
+      source: "\\w+\\s*==\\s*(io.EOF|sql.ErrNoRows)"
+    - path: (?:_test|test_util)\.go$
+      linters:
+        - bodyclose
+        - errcheck
+        - errorlint
+        - gosec
+        - unparam

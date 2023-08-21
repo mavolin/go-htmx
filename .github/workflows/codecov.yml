@@ -1,0 +1,17 @@
+name: Code Coverage
+
+on: [ push,pull_request ]
+
+jobs:
+  codecov:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v3
+      - name: Generate Coverage Report
+        run: go test -coverprofile coverage.txt -covermode atomic ./...
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v3

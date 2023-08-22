@@ -68,7 +68,7 @@ func setHeaders(r *http.Request, w http.ResponseWriter) {
     htmx.Trigger(r, "update-cart", nil)
 	
     // HX-Retarget: #main 
-    // HX-Trigger: {"reload-nav": {ActiveEntry: "foo"}, "update-cart": null}
+    // HX-Trigger: {"reload-nav": {"ActiveEntry": "foo"}, "update-cart": null}
 }
 ```
 

@@ -14,13 +14,18 @@ type responseWriterWrapper struct {
 	errHandler   func(error)
 }
 
-func (r *responseWriterWrapper) Write(data []byte) (int, error) {
-	if !r.wroteHeaders {
-		r.h.AddHeaders(r.ResponseWriter.Header())
-		r.wroteHeaders = true
+func (w *responseWriterWrapper) Write(data []byte) (int, error) {
+	w.writeHeaders()
+	return w.ResponseWriter.Write(data)
+}
+
+func (w *responseWriterWrapper) writeHeaders() {
+	if w.wroteHeaders {
+		return
 	}
 
-	return r.ResponseWriter.Write(data)
+	w.h.AddHeaders(w.ResponseWriter.Header())
+	w.wroteHeaders = true
 }
 
 // NewMiddleware returns a new middleware that adds htmx headers, set by
@@ -33,6 +38,7 @@ func NewMiddleware() func(next http.Handler) http.Handler {
 
 			ww := &responseWriterWrapper{ResponseWriter: w, h: &h}
 			next.ServeHTTP(ww, r)
+			ww.writeHeaders()
 		})
 	}
 }

@@ -114,7 +114,6 @@ type (
 )
 
 func (h *ResponseHeaders) AddHeaders(header http.Header) {
-
 	if h.Location.Path != "" {
 		header.Add("HX-Location", h.Location.HeaderValue())
 	}

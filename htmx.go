@@ -2,7 +2,7 @@ package htmx
 
 import "encoding/json"
 
-// aliases for easier understanding of fields
+// Aliases for easier understanding of fields.
 type (
 	Element       = string
 	ID            = string

@@ -67,8 +67,8 @@ func PreventReplaceURL(r *http.Request) {
 // Reswap sets [ResponseHeaders.Reswap] to the passed [SwapStrategy].
 //
 // Previous values are overwritten.
-func Reswap(r *http.Request, strat SwapStrategy) {
-	Response(r).Reswap = strat
+func Reswap(r *http.Request, strategy SwapStrategy) {
+	Response(r).Reswap = strategy
 }
 
 // Retarget sets [ResponseHeaders.Retarget] to the passed selector.

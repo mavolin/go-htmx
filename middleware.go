@@ -11,15 +11,19 @@ type responseWriterWrapper struct {
 	http.ResponseWriter
 	h            *ResponseHeaders
 	wroteHeaders bool
-	errHandler   func(error)
 }
 
 func (w *responseWriterWrapper) Write(data []byte) (int, error) {
-	w.writeHeaders()
+	w.writeHXHeader()
 	return w.ResponseWriter.Write(data)
 }
 
-func (w *responseWriterWrapper) writeHeaders() {
+func (w *responseWriterWrapper) WriteHeader(statusCode int) {
+	w.writeHXHeader()
+	w.ResponseWriter.WriteHeader(statusCode)
+}
+
+func (w *responseWriterWrapper) writeHXHeader() {
 	if w.wroteHeaders {
 		return
 	}
@@ -38,7 +42,7 @@ func NewMiddleware() func(next http.Handler) http.Handler {
 
 			ww := &responseWriterWrapper{ResponseWriter: w, h: &h}
 			next.ServeHTTP(ww, r)
-			ww.writeHeaders()
+			ww.writeHXHeader()
 		})
 	}
 }

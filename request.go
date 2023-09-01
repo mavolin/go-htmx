@@ -32,7 +32,7 @@ type RequestHeaders struct {
 //
 // This function works without the middleware in place.
 func Request(r *http.Request) *RequestHeaders {
-	if r.Header.Get("Request") != "true" {
+	if r.Header.Get("HX-Request") != "true" {
 		return nil
 	}
 

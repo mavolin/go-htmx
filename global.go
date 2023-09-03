@@ -2,20 +2,72 @@ package htmx
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
+
+// LocationData is a location used as the HX-LocationData response header.
+//
+// See: https://htmx.org/headers/hx-location
+type LocationData struct {
+	// Path is required and is url to load the response from.
+	Path URL
+	// Source is the source element of the request.
+	Source Selector
+	// Event is an event that “triggered” the request.
+	Event Event
+	// Handler is a callback that will handle the response HTML.
+	Handler JS
+	// Target is the target to swap the response into.
+	Target Selector
+	// Swap determines how the response will be swapped in relative to the
+	// target.
+	Swap SwapStrategy
+	// Values are the values to submit with the request.
+	Values any
+	// Headers are the headers to submit with the request.
+	Headers Headers
+}
+
+func (d *LocationData) toHeader() (LocationHeader, error) {
+	h := LocationHeader{
+		Path:    d.Path,
+		Source:  d.Source,
+		Event:   d.Event,
+		Handler: d.Handler,
+		Target:  d.Target,
+		Swap:    d.Swap,
+		Headers: d.Headers,
+	}
+	if h.Values != nil {
+		values, err := json.Marshal(d.Values)
+		if err != nil {
+			return h, fmt.Errorf("HX-Location: Values: %w", err)
+		}
+
+		h.Values = values
+	}
+
+	return h, nil
+}
 
 // Location sets [ResponseHeaders.Location].
 //
 // Previous values are overwritten.
-func Location(r *http.Request, loc LocationData) {
-	Response(r).Location = loc
+func Location(r *http.Request, loc LocationData) error {
+	h, err := loc.toHeader()
+	if err != nil {
+		return err
+	}
+
+	Response(r).Location = h
+	return nil
 }
 
 // LocationPath sets the [ResponseHeaders.LocationData.Path], discarding all
 // other values set for the location.
 func LocationPath(r *http.Request, path URL) {
-	Response(r).Location = LocationData{Path: path}
+	Response(r).Location = LocationHeader{Path: path}
 }
 
 // PushURL sets [ResponseHeaders.PushURL] to the specified same-origin url.

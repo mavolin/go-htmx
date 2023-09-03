@@ -34,8 +34,9 @@ type (
 		// the default of document.body, you can pass more details along with
 		// the event, by setting the remaining Location values.
 		//
-		// If LocationData.Path is an empty string, the location is not included.
-		Location LocationData
+		// If LocationData.Path is an empty string, the location is not
+		// included.
+		Location LocationHeader
 		// PushURL pushes a new url into the history stack:
 		//
 		// The HX-Push-Url header allows you to push a URL into the browser
@@ -48,7 +49,7 @@ type (
 		// attributes.
 		//
 		// To prevent the browser's history from being updated set PushURL to
-		// "false"/
+		// "false".
 		//
 		// The URL must be from the same origin as the request.
 		PushURL SameOriginURL
@@ -89,10 +90,10 @@ type (
 		TriggerAfterSwap map[Event]JSON
 	}
 
-	// LocationData is a location used as the HX-LocationData response header.
+	// LocationHeader is a location used as the HX-Location response header.
 	//
 	// See: https://htmx.org/headers/hx-location
-	LocationData struct {
+	LocationHeader struct {
 		// Path is required and is url to load the response from.
 		Path URL `json:"path,omitempty"`
 		// Source is the source element of the request.
@@ -149,7 +150,7 @@ func (h *ResponseHeaders) AddHeaders(header http.Header) {
 	}
 }
 
-func (loc *LocationData) HeaderValue() string {
+func (loc *LocationHeader) HeaderValue() string {
 	if loc.Source == "" && loc.Event == "" && loc.Handler == "" && loc.Target == "" &&
 		loc.Swap == "" && loc.Values == nil && len(loc.Headers) == 0 {
 		return loc.Path

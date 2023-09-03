@@ -37,7 +37,11 @@ func (w *responseWriterWrapper) writeHXHeader() {
 func NewMiddleware() func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			var h ResponseHeaders
+			h := ResponseHeaders{
+				Trigger:            make(map[Event]JSON),
+				TriggerAfterSettle: make(map[Event]JSON),
+				TriggerAfterSwap:   make(map[Event]JSON),
+			}
 			*r = *r.WithContext(context.WithValue(r.Context(), ctxKey{}, &h))
 
 			ww := &responseWriterWrapper{ResponseWriter: w, h: &h}

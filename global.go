@@ -5,17 +5,17 @@ import (
 	"net/http"
 )
 
-// LocationPath sets the [ResponseHeaders.Location.Path], discarding all other
-// values set for the location.
-func LocationPath(r *http.Request, path URL) {
-	Response(r).Location = Location{Path: path}
-}
-
-// FullLocation allows sets [ResponseHeaders.Location].
+// Location sets [ResponseHeaders.Location].
 //
 // Previous values are overwritten.
-func FullLocation(r *http.Request, loc Location) {
+func Location(r *http.Request, loc LocationData) {
 	Response(r).Location = loc
+}
+
+// LocationPath sets the [ResponseHeaders.LocationData.Path], discarding all
+// other values set for the location.
+func LocationPath(r *http.Request, path URL) {
+	Response(r).Location = LocationData{Path: path}
 }
 
 // PushURL sets [ResponseHeaders.PushURL] to the specified same-origin url.
